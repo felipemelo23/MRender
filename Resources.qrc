@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new">
+        <file>Resources.qrc</file>
+        <file>mordecai.ico</file>
+    </qresource>
+</RCC>
