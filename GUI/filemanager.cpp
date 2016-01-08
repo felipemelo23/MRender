@@ -1,6 +1,6 @@
 #include "filemanager.h"
 
-#include <QDomDocument>
+#include <QtXml\QDomDocument>
 
 #include <Objects/cylinder.h>
 #include <Objects/plane.h>
