@@ -9,6 +9,6 @@ before_install:
 
 # run tests, findbugs, pmd and friends using Ant, Maven or Gradle
 script: 
-  - qmake -qt=qt5 -v
-  - qmake -qt=qt5
+  - qmake -project
+  - qmake MRender.pro
   - make
