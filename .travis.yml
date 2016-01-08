@@ -4,13 +4,13 @@ language: cpp
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
   - sudo apt-get update -qq
-  - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev qtdeclarative5-dev
+  - sudo apt-get install -qq libqt4-dev qt4-qmake
 
 
 # run tests, findbugs, pmd and friends using Ant, Maven or Gradle
 script: 
-  - qmake -qt=qt5 -v
-  - qmake -qt=qt5
+  - qmake -qt=qt4 -v
+  - qmake -qt=qt4
   - qmake -project
   - qmake MRender.pro
   - make
