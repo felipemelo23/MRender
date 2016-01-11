@@ -30,7 +30,6 @@ SOURCES += GUI/main.cpp\
     Math/vec4.cpp \
     Math/mtx4.cpp \
     GUI/imagecreator.cpp \
-    GUI/filemanager.cpp \
     Objects/boundingbox.cpp \
     Render/texture.cpp \
     Objects/pontuallight.cpp \
@@ -53,7 +52,6 @@ HEADERS  += GUI/mainwindow.h \
     Math/vec4.h \
     Math/mtx4.h \
     GUI/imagecreator.h \
-    GUI/filemanager.h \
     Objects/boundingbox.h \
     Render/texture.h \
     Objects/pontuallight.h \
