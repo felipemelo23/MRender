@@ -18,7 +18,7 @@ BoundingBox::BoundingBox(BoundingBox *leftChild, BoundingBox *rightChild)
 
 BoundingBox::BoundingBox(Object3D *obj)
 {
-    Vec4 objMin = obj->getMin();
+    Vec4 objMin = obj.getMin();
     Vec4 objMax = obj->getMax();
 
     min.setX(objMin.getX());
