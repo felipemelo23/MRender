@@ -13,4 +13,4 @@ script:
   - qmake -qt=qt5
   - qmake -project
   - qmake MRender.pro
-  - make
+  - qmake
