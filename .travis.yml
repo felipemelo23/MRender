@@ -4,8 +4,13 @@ before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
   - sudo apt-get update -qq
   - sudo apt-get install -qq g++ qt5-qmake qtbase5-dev
+  - sudo add-apt-repository ppa:beineri/opt-qt541 -y
 
-script: 
+install:
+  - sudo apt-get install qt54base qt54websockets
+  
+script:
+  - source /opt/qt54/bin/qt54-env.sh
   - qmake -qt=qt5 -v
   - qmake -qt=qt5
   - make
