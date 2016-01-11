@@ -1,16 +1,58 @@
 # target programming lamguage
 language: cpp
 
-before_install:
-  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
+os:
+  - linux
 
+install:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         lsb_release -a
+      && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo apt-add-repository -y ppa:beineri/opt-qt542
+      && sudo apt-get -qq update
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt54tools qt54svg qt54webkit qt54script
+      && export CXX="g++-4.8"
+      && export CC="gcc-4.8"
+      ;
+    else
+         brew update > /dev/null
+      && cd `brew --prefix`
+      && echo "We are using QT 5.4.2, because we had troubles with the current 4ea4fd83963d1c1eb1e6fc024be9719f8010748f QT 5.5 brew. The deployed frameworks were loading libraries from /usr/local/Cellar/qt5 instead of the app bundle."
+      && git checkout 00e46351980ad915424aad9316abffc19936809c Library/Formula/qt5.rb
+      && cd -
+      && brew install qt5
+      && chmod -R 755 /usr/local/opt/qt5/*
+      ;
+    fi
 
-# run tests, findbugs, pmd and friends using Ant, Maven or Gradle
-script: 
-  - qmake -qt=qt5 -v
-  - qmake -qt=qt5
-  - qmake -project
-  - qmake MRender.pro
-  - qmake
+script:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         QTDIR="/opt/qt54"
+      && PATH="$QTDIR/bin:$PATH"
+      && qt54-env.sh 
+      ;
+    else
+         QTDIR="/usr/local/opt/qt5"
+      && PATH="$QTDIR/bin:$PATH"
+      && LDFLAGS=-L$QTDIR/lib
+      && CPPFLAGS=-I$QTDIR/include
+      ;
+    fi
+  - cd ./tests
+  - qmake DEFINES+=INTEGRATION_TESTS && make -s -j 2
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      if [ "${TRAVIS_BRANCH}" != "master" ]; then
+           ./../bin/tests/tests -platform minimal -txt
+        && sudo pip install cpp-coveralls
+        && coveralls -b `pwd`/unit_tests/ -r `readlink -m ./../` -e tests/ -E .+/moc_.* -E .+/qrc_.* -E .+/qxt.* -E .+/ui_.*  > coveralls.log
+        ;
+      fi
+      ;
+    else
+         ./../bin/tests/tests.app/Contents/MacOS/tests -platform minimal -txt
+      ;
+    fi
+  - cd ./../src
+  - echo "#define BUILD ""$TRAVIS_BUILD_NUMBER" > build_number.h
+  - qmake MRender.pro CONFIG+=$CONFIG
+  - make
